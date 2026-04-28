@@ -2,6 +2,9 @@
 MathGPT v2  ·  app.py
 Entry point for the Streamlit application.
 """
+from dotenv import load_dotenv
+load_dotenv()
+
 import uuid
 import streamlit as st
 

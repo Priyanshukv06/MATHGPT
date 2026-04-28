@@ -13,7 +13,10 @@ def render_sidebar() -> dict:
         # ── API Key ───────────────────────────────────────────────────
         # Use st.secrets GROQ_API_KEY if available (Streamlit Cloud),
         # otherwise ask the user.
-        secret_key = st.secrets.get("GROQ_API_KEY", "") if hasattr(st, "secrets") else ""
+        try:
+            secret_key = st.secrets.get("GROQ_API_KEY", "")
+        except (FileNotFoundError, KeyError, Exception):
+            secret_key = ""
         if secret_key:
             api_key = secret_key
             st.success("✅ API Key loaded from secrets", icon="🔑")
