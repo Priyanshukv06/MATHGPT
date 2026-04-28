@@ -1,0 +1,22 @@
+# ────────────────────────────────────────────────────────────────────
+#  keep_alive.yml
+#  Pings the Streamlit Community Cloud app every 12 hours so it
+#  never enters sleep mode.  Free, no external service needed.
+# ────────────────────────────────────────────────────────────────────
+name: Keep Streamlit App Alive
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"    # every 12 hours
+  workflow_dispatch:           # allow manual trigger from GitHub UI
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping MathGPT Streamlit App
+        run: |
+          echo "Pinging app at ${{ secrets.STREAMLIT_APP_URL }}"
+          curl -sSf "${{ secrets.STREAMLIT_APP_URL }}" > /dev/null \
+            && echo "✅ App is alive" \
+            || echo "⚠️  App did not respond (may be waking up)"

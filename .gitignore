@@ -1,25 +1,37 @@
-# Ignore environment variables
+# Environment
 .env
+.env.local
+.env.*.local
 
-# Ignore Python cache files
+# Secrets (never commit)
+.streamlit/secrets.toml
+
+# Python
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
 
-# Ignore virtual environments
+# Virtual envs
 venv/
+.venv/
 env/
+ENV/
 
-# Ignore system-specific files
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
 Thumbs.db
 
-# Ignore Streamlit cache
-.streamlit/
-
-# Ignore Jupyter notebook checkpoints (if any)
-.ipynb_checkpoints/
-
-# Ignore logs and temporary files
-logs/
+# Logs
 *.log
