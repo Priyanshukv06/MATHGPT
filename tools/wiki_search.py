@@ -1,5 +1,5 @@
 from langchain_community.utilities import WikipediaAPIWrapper
-from langchain.tools import Tool
+from langchain_core.tools import Tool
 
 _wiki = WikipediaAPIWrapper(top_k_results=2, doc_content_chars_max=1500)
 

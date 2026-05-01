@@ -1,6 +1,7 @@
 import os
 import streamlit as st
-from langchain.agents import AgentExecutor, create_react_agent
+from langchain.agents.agent import AgentExecutor
+from langchain.agents.react.agent import create_react_agent
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferWindowMemory
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
