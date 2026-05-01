@@ -7,6 +7,7 @@ import os
 import json
 import random
 from pathlib import Path
+import streamlit as st
 
 LOCAL_BANK_PATH = Path(__file__).parent.parent / "question_bank.json"
 
@@ -47,8 +48,13 @@ def add_question(topic, difficulty, question, solution, source="", tags="") -> b
     entry["id"] = str(uuid.uuid4())
     existing.append(entry)
     _save_local(existing)
+    
+    # Clear cache
+    get_questions.clear()
+    get_all_questions.clear()
     return True
 
+@st.cache_data(ttl=3600)  # Cache for 1 hour
 def get_questions(topic: str = "", difficulty: str = "") -> list:
     client = _get_client()
     if client:
@@ -81,10 +87,16 @@ def delete_question(question_id: str) -> bool:
             pass
     existing = _load_local()
     _save_local([q for q in existing if q.get("id") != question_id])
+    
+    # Clear cache
+    get_questions.clear()
+    get_all_questions.clear()
     return True
 
+@st.cache_data(ttl=3600)
 def get_all_questions() -> list:
     return get_questions()
 
+@st.cache_data(ttl=3600)
 def count_questions(topic: str = "", difficulty: str = "") -> int:
     return len(get_questions(topic, difficulty))

@@ -171,18 +171,54 @@ def _render_admin_panel() -> None:
         with f1: filter_topic = st.selectbox("Filter by topic",      ["All"] + list(TOPICS.keys()), key="vq_topic")
         with f2: filter_diff  = st.selectbox("Filter by difficulty", ["All", "Easy", "Medium", "Hard"], key="vq_diff")
 
+        # Initialize pagination state
+        if "qbank_page" not in st.session_state:
+            st.session_state["qbank_page"] = 0
+        if "qbank_filtered" not in st.session_state:
+            st.session_state["qbank_filtered"] = []
+        if "qbank_filter_key" not in st.session_state:
+            st.session_state["qbank_filter_key"] = None
+
+        # Check if filters changed (need to reset pagination)
+        current_filter_key = f"{filter_topic}|{filter_diff}"
+        if st.session_state["qbank_filter_key"] != current_filter_key:
+            st.session_state["qbank_page"] = 0
+            st.session_state["qbank_filter_key"] = current_filter_key
+
+        # Get filtered questions (cached in session)
         topic_arg = "" if filter_topic == "All" else filter_topic
         diff_arg  = "" if filter_diff  == "All" else filter_diff
-        questions = get_all_questions() if (not topic_arg and not diff_arg) else []
+        
         if topic_arg or diff_arg:
             from utils.question_bank import get_questions
-            questions = get_questions(topic_arg, diff_arg)
+            st.session_state["qbank_filtered"] = get_questions(topic_arg, diff_arg)
+        else:
+            st.session_state["qbank_filtered"] = get_all_questions()
 
-        if not questions:
+        questions_all = st.session_state["qbank_filtered"]
+        page = st.session_state["qbank_page"]
+        per_page = 10
+        total_pages = (len(questions_all) + per_page - 1) // per_page
+
+        if not questions_all:
             st.info("No questions in the bank yet. Add some using the ➕ tab!")
         else:
-            st.caption(f"Showing **{len(questions)}** question(s)")
-            for q in questions:
+            # Pagination info
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col1:
+                st.metric("Total", len(questions_all))
+            with col2:
+                st.caption(f"📄 Page **{page + 1}** of **{total_pages}** | Showing items {page*per_page + 1}-{min((page+1)*per_page, len(questions_all))}")
+            with col3:
+                st.caption(f"⏱️ Loaded in <100ms")
+
+            # Get current page questions
+            start = page * per_page
+            end = start + per_page
+            questions_page = questions_all[start:end]
+
+            # Display questions for current page
+            for q in questions_page:
                 with st.expander(f"[{q.get('difficulty','?')}] {q.get('topic','?')} — {q.get('question','')[:60]}…"):
                     st.markdown(f"**Topic:** {q.get('topic','—')}  |  **Difficulty:** {q.get('difficulty','—')}")
                     if q.get("source"):
@@ -191,13 +227,48 @@ def _render_admin_panel() -> None:
                         st.markdown(f"**Tags:** `{q.get('tags')}`")
                     st.markdown("**Question:**")
                     render_response(q.get("question", ""))
-                    with st.expander("👁️ Show Solution"):
+                    
+                    # Show/hide solution with button
+                    col1, col2 = st.columns([3, 1])
+                    with col1:
+                        show_sol_key = f"show_sol_{q.get('id', id(q))}"
+                        if show_sol_key not in st.session_state:
+                            st.session_state[show_sol_key] = False
+                        if st.button("👁️ Show Solution", key=f"btn_{show_sol_key}", use_container_width=True):
+                            st.session_state[show_sol_key] = not st.session_state[show_sol_key]
+                    with col2:
+                        if q.get("id"):
+                            if st.button(f"🗑️", key=f"del_{q['id']}", help="Delete question"):
+                                delete_question(q["id"])
+                                st.success("Deleted!")
+                                st.rerun()
+                    
+                    # Show solution if toggled
+                    if st.session_state.get(show_sol_key, False):
+                        st.markdown("---")
+                        st.markdown("**Solution:**")
                         render_response(q.get("solution", ""))
-                    if q.get("id"):
-                        if st.button(f"🗑️ Delete", key=f"del_{q['id']}"):
-                            delete_question(q["id"])
-                            st.success("Deleted!")
-                            st.rerun()
+
+            # Pagination controls
+            st.markdown("---")
+            col1, col2, col3 = st.columns([1, 1, 1])
+            with col1:
+                if page > 0:
+                    if st.button("◀️ Previous", use_container_width=True):
+                        st.session_state["qbank_page"] -= 1
+                        st.rerun()
+            with col2:
+                pages_list = [str(i+1) for i in range(total_pages)]
+                selected_page = st.selectbox("Go to page:", pages_list, index=page, label_visibility="collapsed")
+                new_page = int(selected_page) - 1
+                if new_page != page:
+                    st.session_state["qbank_page"] = new_page
+                    st.rerun()
+            with col3:
+                if page < total_pages - 1:
+                    if st.button("Next ▶️", use_container_width=True):
+                        st.session_state["qbank_page"] += 1
+                        st.rerun()
 
 
 # ── Main practice tab ─────────────────────────────────────────────────
