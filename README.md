@@ -19,6 +19,7 @@
 
 ## ✨ Features
 
+### Core Capabilities
 | Feature | Description |
 |---|---|
 | ⚡ **SymPy Calculator** | Solves arithmetic, algebra, and symbolic math — not just numeric eval |
@@ -29,9 +30,25 @@
 | 🧠 **Reasoning Engine** | Logical & word problems with full chain-of-thought explanations |
 | 💬 **Conversation Memory** | Remembers last 10 exchanges — ask follow-up questions naturally |
 | 📊 **LaTeX Rendering** | Math output auto-detected and rendered with `st.latex()` |
+
+### Practice Mode 🧪
+| Feature | Description |
+|---|---|
+| 📚 **Question Bank** | **19,893 pre-loaded questions** across 6+ topics (Algebra, Calculus, Geometry, etc.) |
+| 🤖 **AI Problem Generation** | Generate unlimited problems with configurable difficulty & subtopic |
+| ⭐ **Smart Evaluation** | LLM evaluates your answer, gives feedback, shows correct solution |
+| 📊 **Scoring & Streaks** | Track accuracy, see progress per topic, build learning streaks |
+| 📥 **Import Methods** | Load from HuggingFace (12.5K competition math), CSV, or manual entry |
+| 🎯 **Difficulty Levels** | Easy, Medium, Hard — practice adaptive learning |
+
+### Advanced Features
+| Feature | Description |
+|---|---|
 | 📥 **Chat Export** | Download your session as **JSON** or **Markdown** |
 | ☁️ **Supabase Persistence** | Optional cross-session chat history saved to PostgreSQL |
-| 🤖 **Multi-Model** | Switch between Llama 3.3 70B, Gemma 2 9B, Mixtral 8x7B in the sidebar |
+| 🤖 **Multi-Model LLM** | **10 models** from NVIDIA (DeepSeek R1, Nemotron 49B, Llama 3.3) & Groq (Gemma, Mixtral) |
+| 🔄 **Provider Switching** | Switch between NVIDIA NIM (primary) & Groq (fallback) in sidebar |
+| 🌐 **Cloud Ready** | Deploy on Streamlit Cloud with 1 click (GitHub + secrets)
 
 ---
 
@@ -76,12 +93,28 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
-# Edit .env and add your GROQ_API_KEY
+# Edit .env and add your API keys:
+# NVIDIA_API_KEY=your_nvidia_key_from_build.nvidia.com
+# GROQ_API_KEY=your_groq_key_from_console.groq.com
 ```
 
-> 🔑 Get a free Groq key at [console.groq.com](https://console.groq.com)
+> 🔑 **Get API Keys:**
+> - **NVIDIA**: [build.nvidia.com](https://build.nvidia.com) (free, 24-hour tokens)
+> - **Groq**: [console.groq.com](https://console.groq.com) (free, no rate limits)
 
-### 3 · Run
+### 3 · Load question bank (optional)
+
+The app ships with **19,893 questions** pre-loaded. To add more:
+
+```bash
+# Import from HuggingFace (133k questions from 3 datasets)
+python scripts/import_huggingface.py --dataset all
+
+# Or import custom CSV
+python scripts/bulk_import_csv.py --file your_questions.csv
+```
+
+### 4 · Run locally
 
 ```bash
 streamlit run app.py
@@ -93,34 +126,39 @@ App opens at **http://localhost:8501** 🎉
 
 ## ☁️ Deploy to Streamlit Community Cloud
 
-1. **Push** this repo to your GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io) → **New app**
-3. Select `Priyanshukv06/MATHGPT`, branch `main`, file `app.py`
-4. Under **Advanced settings → Secrets**, add:
+**See [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) for detailed instructions.**
 
-```toml
-# Required
-GROQ_API_KEY = "gsk_your_key_here"
+### Quick Deploy (3 steps)
 
-# Optional — Supabase persistence
-SUPABASE_URL = "https://xxxx.supabase.co"
-SUPABASE_KEY = "your-anon-key"
-```
+1. **Prepare repo**
+   ```bash
+   git add .
+   git commit -m "Deploy MathGPT v2.1.0"
+   git push origin main
+   ```
 
-5. Click **Deploy** — live in ~2 minutes ✅
+2. **Create app on Streamlit Cloud**
+   - Go to [share.streamlit.io](https://share.streamlit.io)
+   - Click **New app** → GitHub authentication
+   - Select repo → branch `main` → file `app.py`
 
----
+3. **Add secrets**
+   - Go to app settings → **Advanced settings → Secrets**
+   - Paste (replace with your actual keys):
+   ```toml
+   NVIDIA_API_KEY = "your_nvidia_key"
+   GROQ_API_KEY = "your_groq_key"
+   ```
 
-## ⏱️ Keep-Alive (Cron Job)
+4. **Deploy** — live in ~2 minutes ✅
 
-Streamlit Community Cloud sleeps after 24h of inactivity.  
-This repo ships a **GitHub Actions workflow** that pings your app every 12 hours — no external service needed.
+### Keep-Alive (Prevent Sleeping)
 
-**Setup:**
-1. Copy your deployed app URL
-2. Go to **GitHub → Settings → Secrets → Actions**
-3. Add secret: `STREAMLIT_APP_URL` = `https://your-app.streamlit.app`
-4. The workflow at `.github/workflows/keep_alive.yml` handles the rest
+Streamlit Cloud sleeps after 24h inactivity. Enable auto-pings:
+
+1. Go to GitHub → **Settings → Secrets → Actions**
+2. Add: `STREAMLIT_APP_URL` = `https://mathgpt-YOUR-USERNAME.streamlit.app`
+3. The workflow at `.github/workflows/keep_alive.yml` auto-runs every 12h
 
 ---
 
@@ -151,33 +189,55 @@ When `SUPABASE_URL` and `SUPABASE_KEY` are present in secrets/env, the app autom
 MATHGPT/
 ├── app.py                        # Main entry (~90 lines)
 ├── config.py                     # Models, prompts, constants
+├── question_bank.json            # ✅ 19,893 pre-loaded questions
 │
-├── tools/
-│   ├── calculator.py             # SymPy-powered math solver
-│   ├── wiki_search.py            # Wikipedia API wrapper
-│   ├── reasoning.py              # LCEL reasoning + integral chains
-│   └── graph_plotter.py          # matplotlib function grapher
+├── tools/                        # Math tools (SymPy, graphs, etc.)
+│   ├── calculator.py             # SymPy solver (arithmetic, algebra, equations)
+│   ├── integral_solver.py        # Integration with technique explanation
+│   ├── graph_plotter.py          # matplotlib function grapher
+│   ├── reasoning.py              # LCEL reasoning chains
+│   └── wiki_search.py            # Wikipedia API wrapper
 │
-├── utils/
-│   ├── agent.py                  # AgentExecutor + memory builder
-│   ├── latex.py                  # LaTeX detection & rendering
-│   ├── export.py                 # JSON + Markdown export
-│   └── supabase_client.py        # Optional persistence layer
+├── utils/                        # Core utilities
+│   ├── agent.py                  # LangChain ReAct AgentExecutor
+│   ├── latex.py                  # LaTeX → Streamlit conversion pipeline
+│   ├── export.py                 # JSON + Markdown chat export
+│   ├── question_bank.py          # CRUD for 19.8K questions
+│   ├── supabase_client.py        # Optional Supabase persistence
+│   └── __init__.py
 │
-├── ui/
-│   ├── sidebar.py                # Model picker, stats, export buttons
-│   └── styles.py                 # Custom CSS + welcome screen
+├── ui/                           # Streamlit UI components
+│   ├── sidebar.py                # Model selector, API keys, export buttons
+│   ├── styles.py                 # Dark theme, welcome screen
+│   └── tabs/
+│       ├── chat.py               # 💬 Main conversation tab
+│       ├── practice.py           # 🧪 AI problem generation + evaluation
+│       ├── pdf_solver.py         # 📄 PDF extraction & solving
+│       ├── formulas.py           # 📚 Math reference library
+│       ├── analytics.py          # 📊 Session stats & progress
+│       └── __init__.py
+│
+├── scripts/                      # Data import tools
+│   ├── import_huggingface.py     # ← Import from HuggingFace (133k questions)
+│   ├── bulk_import_csv.py        # ← CSV question import with validation
+│   └── __init__.py
+│
+├── data/
+│   └── questions_template.csv    # Sample 14 questions (template)
 │
 ├── .streamlit/
-│   └── config.toml               # Dark theme
+│   ├── config.toml               # Dark theme, headless mode
+│   └── secrets.toml.example      # Template for cloud secrets
 │
 ├── .github/
 │   └── workflows/
-│       └── keep_alive.yml        # Cron ping every 12h
+│       └── keep_alive.yml        # Auto-ping every 12h (prevent sleep)
 │
-├── requirements.txt
-├── .env.example
-└── .gitignore
+├── README.md                     # This file
+├── DEPLOYMENT_CHECKLIST.md       # Full deployment guide
+├── requirements.txt              # All Python dependencies (15 packages)
+├── .env.example                  # Template for API keys
+└── .gitignore                    # Git security exclusions
 ```
 
 ---

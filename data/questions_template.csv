@@ -1,0 +1,15 @@
+topic,difficulty,question,solution,source,tags
+🔢 Algebra,Easy,"Solve for x: \( 3x^2 - 12 = 0 \)","\( x = \pm 2 \)","NCERT Class 10 Ex4.2",quadratic
+🔢 Algebra,Medium,"Find roots of \( 2x^2 - 7x + 3 = 0 \) using the quadratic formula.","\( x = \frac{7 \pm 5}{4} \), so \( x = 3 \) or \( x = 0.5 \)","NCERT Class 10",quadratic formula
+🔢 Algebra,Hard,"If \( \alpha, \beta \) are roots of \( x^2 - px + q = 0 \), find \( \alpha^3 + \beta^3 \).","\( (\alpha+\beta)^3 - 3\alpha\beta(\alpha+\beta) = p^3 - 3pq \)","JEE 2020",vieta formulas
+📈 Calculus,Easy,"Differentiate \( f(x) = 3x^4 - 5x^2 + 7 \).","\( f'(x) = 12x^3 - 10x \)","NCERT Class 12 Ex5.2",power rule
+📈 Calculus,Medium,"Evaluate \( \int_0^{\pi/2} \sin x\,dx \).","\( [-\cos x]_0^{\pi/2} = 1 \)","JEE 2019",definite integral
+📈 Calculus,Hard,"Find area enclosed between \( y = x^2 \) and \( y = x + 2 \).","Solve x²=x+2 → x=-1,2. Area = \( \int_{-1}^{2}(x+2-x^2)dx = 9/2 \)","JEE Advanced 2021",area between curves
+📐 Trigonometry,Easy,"Prove \( \sin^2\theta + \cos^2\theta = 1 \).","Follows from Pythagoras on unit circle.","Standard Identity",pythagorean
+📐 Trigonometry,Medium,"Solve \( 2\sin^2 x - \sin x - 1 = 0 \) for \( 0 \leq x \leq 2\pi \).","Factor: (2sinx+1)(sinx-1)=0 → x = π/2, 7π/6, 11π/6","NCERT Class 11",trig equations
+🎲 Probability,Easy,"Two dice rolled. P(sum = 7)?","6 favourable / 36 total = 1/6","NCERT Class 11",basic probability
+🎲 Probability,Medium,"Bag: 5 red, 3 blue. Draw 2 without replacement. P(both red)?","(5/8)×(4/7) = 5/14","Entrance 2022",conditional probability
+📊 Linear Algebra,Medium,"Find eigenvalues of \( A = \begin{pmatrix} 4 & 1 \\ 2 & 3 \end{pmatrix} \).","det(A-λI)=0 → λ²-7λ+10=0 → λ=5 or λ=2","GATE 2020",eigenvalues
+📊 Linear Algebra,Hard,"Verify Cayley-Hamilton for \( A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} \).","Char eq: λ²-5λ-2=0. Compute A²-5A-2I = 0 ✓","GATE 2022",cayley-hamilton
+🔷 Geometry,Easy,"Distance between A(3,4) and B(0,0)?","\( d = \sqrt{9+16} = 5 \)","NCERT Class 10",distance formula
+🔷 Geometry,Medium,"Equation of circle: centre (2,-3), radius 5.","\( (x-2)^2 + (y+3)^2 = 25 \)","NCERT Class 11",circle equation

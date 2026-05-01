@@ -5,6 +5,7 @@
 
 # Secrets (never commit)
 .streamlit/secrets.toml
+secrets.toml
 
 # Python
 __pycache__/
@@ -28,6 +29,8 @@ ENV/
 .idea/
 *.swp
 *.swo
+*.sublime-project
+*.sublime-workspace
 
 # OS
 .DS_Store
@@ -35,3 +38,21 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Node/npm (if using frontend tools)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Streamlit cache
+.streamlit/cache/
+.streamlit/*.db
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Local data files (large question banks)
+# Uncomment if question_bank.json should NOT be committed
+# question_bank.json
