@@ -58,7 +58,7 @@ def _build_llm(cfg: dict):
 
 
 def _generate_ai_problem(llm, topic: str, difficulty: str, subtopic: str) -> str:
-    from langchain_core.prompts import PromptTemplate
+    from langchain.prompts import PromptTemplate
     from langchain_core.output_parsers import StrOutputParser
 
     tmpl = PromptTemplate(
@@ -84,7 +84,7 @@ def _generate_ai_problem(llm, topic: str, difficulty: str, subtopic: str) -> str
 
 def _evaluate_answer(llm, problem: str, solution: str, user_answer: str) -> tuple:
     """Evaluate user answer. Uses stored solution if available, otherwise LLM judges."""
-    from langchain_core.prompts import PromptTemplate
+    from langchain.prompts import PromptTemplate
     from langchain_core.output_parsers import StrOutputParser
 
     if solution.strip():

@@ -1,23 +1,8 @@
 import os
 import streamlit as st
-from langchain_core.prompts import PromptTemplate
-
-# Handle LangChain 0.2.0+ import changes
-try:
-    from langchain.agents import AgentExecutor, create_react_agent
-except ImportError:
-    try:
-        from langchain.agents.agent import AgentExecutor
-        from langchain.agents.mrkl.agent import create_react_agent
-    except ImportError:
-        from langchain.agents.agent import AgentExecutor
-        from langchain_core.agents import create_react_agent
-
-try:
-    from langchain.memory import ConversationBufferWindowMemory
-except ImportError:
-    from langchain_community.memory import ConversationBufferWindowMemory
-
+from langchain.agents import AgentExecutor, create_react_agent
+from langchain.prompts import PromptTemplate
+from langchain.memory import ConversationBufferWindowMemory
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
 
 from tools.calculator    import calculator_tool

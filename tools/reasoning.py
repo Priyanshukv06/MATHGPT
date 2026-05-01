@@ -1,6 +1,6 @@
-from langchain_core.prompts import PromptTemplate
+from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.tools import Tool
+from langchain.tools import Tool
 
 # These chains are built lazily so we don't need LLM at import time
 _reasoning_chain = None
