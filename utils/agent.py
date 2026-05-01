@@ -1,9 +1,8 @@
 import os
 import streamlit as st
-from langchain_core.agents import AgentExecutor
-from langchain.agents import create_react_agent
+from langchain.agents import AgentExecutor, create_react_agent
 from langchain.prompts import PromptTemplate
-from langchain_core.memory import ConversationBufferWindowMemory
+from langchain.memory import ConversationBufferWindowMemory
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
 
 from tools.calculator    import calculator_tool
