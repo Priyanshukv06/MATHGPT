@@ -11,7 +11,7 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Optional-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-[🚀 Live Demo](https://your-app.streamlit.app) · [🐛 Report Bug](https://github.com/Priyanshukv06/MATHGPT/issues) · [✨ Request Feature](https://github.com/Priyanshukv06/MATHGPT/issues)
+[🚀 Live Demo](https://mathgpt-06.streamlit.app/) · [🐛 Report Bug](https://github.com/Priyanshukv06/MATHGPT/issues) · [✨ Request Feature](https://github.com/Priyanshukv06/MATHGPT/issues)
 
 </div>
 
