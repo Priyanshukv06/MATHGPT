@@ -15,7 +15,7 @@ from sympy.parsing.sympy_parser import (
 import matplotlib
 matplotlib.use("Agg")          # headless — no GUI window
 import matplotlib.pyplot as plt
-from langchain.tools import Tool
+from langchain_core.tools import Tool
 
 _TRANSFORMS = standard_transformations + (implicit_multiplication_application,)
 
